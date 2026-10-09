@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShoppingAgent</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🛒 ShoppingAgent</h1>
+      <p class="subtitle">Finding you better deals</p>
+    </div>
+
+    <!-- Best Deals Section -->
+    <div class="section">
+      <h2>💰 Best Deals</h2>
+      <div id="best-deals-container" class="deals-container">
+        <div class="loading-small">Loading prices...</div>
+      </div>
+    </div>
+
+    <!-- Live Capture Status -->
+    <div class="section">
+      <h2>📊 Live Capture</h2>
+      <div class="status">
+        <div class="status-item">
+          <span class="label">Status:</span>
+          <span class="value" id="capture-status">Active</span>
+        </div>
+        <div class="status-item">
+          <span class="label">Prices Captured:</span>
+          <span class="value" id="queue-size">0</span>
+        </div>
+      </div>
+      <p class="help-text">Capturing prices as you browse stores.</p>
+    </div>
+
+    <!-- Historical Data Import -->
+    <div class="section">
+      <h2>Import Order History</h2>
+      <p class="help-text">Upload past orders to bootstrap your profile (optional):</p>
+
+      <div class="upload-box" id="upload-box">
+        <input type="file" id="file-input" multiple accept=".csv,.xlsx,.jpg,.jpeg,.png,.pdf" hidden>
+        <div class="upload-content">
+          <button id="upload-btn" class="button primary-small">
+            📤 Choose Files
+          </button>
+          <div class="upload-hint">CSV • Images • Exports</div>
+        </div>
+      </div>
+
+      <div id="upload-status" class="upload-status" style="display: none;">
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="upload-message">Processing...</p>
+      </div>
+
+      <div id="upload-results" class="upload-results" style="display: none;">
+        <p id="results-message"></p>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="section">
+      <div class="status-item">
+        <span class="label">Your ID:</span>
+        <span class="value monospace" id="user-id">loading...</span>
+        <button class="btn-icon" id="copy-user-id" title="Copy ID">📋</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="open-dashboard" class="button primary">📊 Dashboard</button>
+      <button id="settings" class="button secondary">⚙️ Settings</button>
+    </div>
+
+    <div class="footer">
+      <p>ShoppingAgent v0.2.0 | <a href="#">Privacy</a> • <a href="#">FAQ</a></p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

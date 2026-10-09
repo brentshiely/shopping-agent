@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShoppingAgent</title>
+  <link rel="stylesheet" href="side_panel.css">
+</head>
+<body>
+  <div class="side-panel">
+    <!-- Header -->
+    <div class="header">
+      <h1>🛒 ShoppingAgent</h1>
+      <p class="tagline">Best Deals</p>
+    </div>
+
+    <!-- Live Status -->
+    <div class="section">
+      <div class="status-bar">
+        <span class="status-indicator" id="status-dot"></span>
+        <span id="status-text">Active</span>
+        <span class="capture-count" id="capture-count">0</span>
+      </div>
+    </div>
+
+    <!-- Best Deals -->
+    <div class="deals-section">
+      <div id="deals-container" class="deals-container">
+        <div class="placeholder">Browse stores to see deals</div>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="footer">
+      <p id="last-update">--</p>
+      <button id="view-all" class="view-all-btn">View All →</button>
+    </div>
+  </div>
+
+  <script src="side_panel.js"></script>
+</body>
+</html>

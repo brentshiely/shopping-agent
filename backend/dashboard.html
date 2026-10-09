@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShoppingAgent Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .search-box {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .search-box button {
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .search-box button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .best-deal {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      border-left: 4px solid #48bb78;
+    }
+
+    .best-deal.empty {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+      border-left-color: #ddd;
+    }
+
+    .deal-header {
+      font-size: 14px;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .deal-content {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .deal-product {
+      flex: 1;
+    }
+
+    .deal-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .deal-store {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .deal-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: #48bb78;
+    }
+
+    .deal-savings {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    thead {
+      background: #f9f9f9;
+      border-bottom: 2px solid #eee;
+    }
+
+    th {
+      padding: 15px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    .store {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .product-name {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f0f0f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: #fff5f5;
+      border-left: 4px solid #f56565;
+      padding: 20px;
+      border-radius: 4px;
+      color: #742a2a;
+      margin: 20px 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🛒 ShoppingAgent Dashboard</h1>
+      <p>Real-time price tracking as you browse</p>
+    </header>
+
+    <!-- Search -->
+    <div class="search-box">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search for products (e.g., Cheerios)..."
+      >
+      <button onclick="searchProducts()">Search</button>
+      <button onclick="loadAllPrices()" style="background: #666;">Refresh All</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Prices Captured</div>
+        <div class="stat-value" id="total-count">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Unique Products</div>
+        <div class="stat-value" id="unique-products">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Stores Tracked</div>
+        <div class="stat-value" id="stores-count">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Last Update</div>
+        <div class="stat-value" id="last-update" style="font-size: 14px;">--:--</div>
+      </div>
+    </div>
+
+    <!-- Best Deal -->
+    <div id="best-deal-container"></div>
+
+    <!-- Filters -->
+    <div class="filters" id="platform-filters"></div>
+
+    <!-- Table -->
+    <div id="loading" class="loading" style="display: none;">Loading prices...</div>
+    <div id="error" class="error" style="display: none;"></div>
+    <table id="prices-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Store</th>
+          <th>Price</th>
+          <th>Location</th>
+          <th>Captured</th>
+        </tr>
+      </thead>
+      <tbody id="prices-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const BACKEND_URL = 'http://localhost:8000';
+    let allPrices = [];
+    let filteredPrices = [];
+    let currentSearch = '';
+    let currentPlatformFilter = null;
+
+    // Load all prices on page load
+    window.addEventListener('load', () => {
+      loadAllPrices();
+      setInterval(loadAllPrices, 3000); // Refresh every 3 seconds
+    });
+
+    async function loadAllPrices() {
+      try {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+
+        const response = await fetch(`${BACKEND_URL}/api/v1/price-captures`);
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        allPrices = data || [];
+
+        // Sort by timestamp descending
+        allPrices.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        updateStats();
+        buildPlatformFilters();
+        applyFilters();
+        document.getElementById('loading').style.display = 'none';
+
+      } catch (error) {
+        console.error('Error loading prices:', error);
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = `Error: ${error.message}`;
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('total-count').textContent = allPrices.length;
+
+      const uniqueProducts = new Set(allPrices.map(p => p.product_name)).size;
+      document.getElementById('unique-products').textContent = uniqueProducts;
+
+      const stores = new Set(allPrices.map(p => p.platform)).size;
+      document.getElementById('stores-count').textContent = stores;
+
+      if (allPrices.length > 0) {
+        const lastTime = new Date(allPrices[0].timestamp);
+        document.getElementById('last-update').textContent = lastTime.toLocaleTimeString();
+      }
+    }
+
+    function buildPlatformFilters() {
+      const platforms = [...new Set(allPrices.map(p => p.platform))].sort();
+      const container = document.getElementById('platform-filters');
+      container.innerHTML = '';
+
+      platforms.forEach(platform => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = platform.charAt(0).toUpperCase() + platform.slice(1);
+        btn.onclick = () => {
+          currentPlatformFilter = currentPlatformFilter === platform ? null : platform;
+          updateFilterButtons();
+          applyFilters();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function updateFilterButtons() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const platform = btn.textContent.toLowerCase();
+        if (currentPlatformFilter && platform.includes(currentPlatformFilter)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function searchProducts() {
+      currentSearch = document.getElementById('search-input').value.toLowerCase();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      filteredPrices = allPrices.filter(p => {
+        const matchesSearch = currentSearch === '' ||
+          p.product_name.toLowerCase().includes(currentSearch);
+        const matchesPlatform = currentPlatformFilter === null ||
+          p.platform === currentPlatformFilter;
+        return matchesSearch && matchesPlatform;
+      });
+
+      renderTable();
+      renderBestDeal();
+    }
+
+    function renderBestDeal() {
+      const container = document.getElementById('best-deal-container');
+
+      if (filteredPrices.length === 0) {
+        container.innerHTML = '<div class="best-deal empty">No prices found. Browse stores to see results!</div>';
+        return;
+      }
+
+      // Group by product
+      const byProduct = {};
+      filteredPrices.forEach(p => {
+        if (!byProduct[p.product_name]) {
+          byProduct[p.product_name] = [];
+        }
+        byProduct[p.product_name].push(p);
+      });
+
+      // Find best deal overall
+      let bestDeal = null;
+      let bestPrice = Infinity;
+
+      filteredPrices.forEach(p => {
+        if (p.price < bestPrice) {
+          bestPrice = p.price;
+          bestDeal = p;
+        }
+      });
+
+      if (!bestDeal) return;
+
+      // Find second best for savings calculation
+      let secondPrice = Math.min(
+        ...filteredPrices
+          .filter(p => p.price !== bestDeal.price)
+          .map(p => p.price),
+        Infinity
+      );
+
+      const savings = secondPrice - bestDeal.price;
+
+      container.innerHTML = `
+        <div class="best-deal">
+          <div class="deal-header">✨ Best Deal Found</div>
+          <div class="deal-content">
+            <div class="deal-product">
+              <div class="deal-name">${bestDeal.product_name}</div>
+              <div class="deal-store">${bestDeal.platform.toUpperCase()}</div>
+              ${bestDeal.store_location ? `<div class="deal-store">📍 ${bestDeal.store_location}</div>` : ''}
+            </div>
+            <div>
+              <div class="deal-price">$${bestDeal.price.toFixed(2)}</div>
+              ${savings > 0 ? `<div class="deal-savings">Save $${savings.toFixed(2)} vs. next best</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('prices-body');
+      const table = document.getElementById('prices-table');
+
+      if (filteredPrices.length === 0) {
+        table.style.display = 'none';
+        return;
+      }
+
+      table.style.display = 'table';
+      tbody.innerHTML = filteredPrices.map(p => {
+        const time = new Date(p.timestamp).toLocaleTimeString();
+        return `
+          <tr>
+            <td class="product-name">${p.product_name}</td>
+            <td class="store">${p.platform.toUpperCase()}</td>
+            <td class="price">$${p.price.toFixed(2)}</td>
+            <td>${p.store_location || '-'}</td>
+            <td class="timestamp">${time}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
